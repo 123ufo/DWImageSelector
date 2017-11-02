@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/item_margin"
+                android:foreground="@drawable/selector_item">
+
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorLine"
+        android:scaleType="centerCrop"/>
+
+
+    <ImageButton
+        android:id="@+id/ib_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:background="@color/colorTransparency"
+        android:padding="15dp"
+        android:src="@drawable/selector_image_checkbox"/>
+
+
+</RelativeLayout>
