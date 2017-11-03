@@ -1,5 +1,7 @@
 package com.ufo.imageselector.model.entity;
 
+import java.io.Serializable;
+
 /**
  * 日期:2017/11/1
  * <p>
@@ -8,7 +10,7 @@ package com.ufo.imageselector.model.entity;
  * 描述:图片实体类
  */
 
-public class ImageEntity {
+public class ImageEntity implements Serializable{
 
     //图片的路径
     private String path;

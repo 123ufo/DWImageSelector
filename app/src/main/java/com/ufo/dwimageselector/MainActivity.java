@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
-import com.ufo.imageselector.PhotoActivity;
+import com.ufo.imageselector.DWImages;
 import com.ufo.imageselector.model.ImageHelper;
 import com.ufo.imageselector.model.entity.ImageEntity;
 
@@ -33,8 +33,21 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void startToImageSelector() {
-        Intent intent = new Intent(this, PhotoActivity.class);
-        startActivity(intent);
+        DWImages.getImages(this, DWImages.ACTION_ALBUM, 6);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        DWImages.parserResult(requestCode, data, new DWImages.GetImagesCallback() {
+            @Override
+            public void onResult(List<String> images) {
+                Log.d(TAG, "onResult:--> : images: " + images.size());
+                for (int i = 0; i < images.size(); i++) {
+                    Log.d(TAG, "onResult:--> images: " + images.get(i));
+                }
+            }
+        });
     }
 
     private void testFetchImages() {

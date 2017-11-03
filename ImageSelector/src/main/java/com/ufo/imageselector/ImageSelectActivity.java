@@ -1,5 +1,6 @@
 package com.ufo.imageselector;
 
+import android.content.Intent;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,6 +16,7 @@ import com.ufo.imageselector.utils.AnimatorUtils;
 import com.ufo.imageselector.utils.ResourceUtils;
 import com.ufo.imageselector.widget.TitleBar;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,12 +100,12 @@ public class ImageSelectActivity extends BasicActivity {
             mTvPreview.setEnabled(false);
             mTvPreview.setTextColor(ResourceUtils.getColor(this, R.color.colorRedDisable));
             mTitleBar.setTvRightTextEnable(false);
-            mTitleBar.setTvRightTextColor( R.color.colorRedDisable);
+            mTitleBar.setTvRightTextColor(R.color.colorRedDisable);
         } else {
             mTvPreview.setEnabled(true);
             mTvPreview.setTextColor(ResourceUtils.getColor(this, R.color.colorRed));
             mTitleBar.setTvRightTextEnable(true);
-            mTitleBar.setTvRightTextColor( R.color.colorRed);
+            mTitleBar.setTvRightTextColor(R.color.colorRed);
         }
     }
 
@@ -130,10 +132,25 @@ public class ImageSelectActivity extends BasicActivity {
 
     }
 
+    //带回数据到上个页面
+    private void setResultAndFinish() {
+        Intent intent = new Intent();
+        intent.putExtra(PhotoActivity.KEY_DATA, (Serializable) selectImageList);
+        setResult(0, intent);
+        finish();
+    }
+
+    //跳到预览页面
+    private void launcherToViewerActivity() {
+        Intent intent = new Intent(this, ViewerActivity.class);
+        intent.putExtra(PhotoActivity.KEY_DATA, (Serializable) selectImageList);
+        startActivity(intent);
+    }
+
     private class MyOnTitleBarAllClickListener implements TitleBar.OnTitleBarAllClickListener {
         @Override
         public void onRightTextButtonClick(View view) {
-
+            setResultAndFinish();
         }
 
         @Override
@@ -167,7 +184,7 @@ public class ImageSelectActivity extends BasicActivity {
     private class MyOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-
+            launcherToViewerActivity();
         }
     }
 }

@@ -1,0 +1,6 @@
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-path name="DWImagesSelector" path="DWImagesSelector/" />
+    <!--<external-path name="hanyustore" path="img/" />-->
+    <root-path path="" name="emulated/" />
+
+</paths>

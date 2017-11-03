@@ -39,7 +39,12 @@ public class AlbumAdapter extends BasicAdapter {
         holder.ivImage.getLayoutParams().width = itemSize;
         holder.ivImage.getLayoutParams().height = itemSize;
         holder.ivImage.setImageResource(R.color.colorLine);
-        ImageLoader.getInstance().loadImage(entity.getPath(), holder.ivImage);
+        if (position == 0) {
+            holder.ivImage.setImageResource(R.mipmap.ic_camera);
+        } else {
+            ImageLoader.getInstance().loadImage(entity.getPath(), holder.ivImage);
+        }
+
     }
 
 
