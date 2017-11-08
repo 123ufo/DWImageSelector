@@ -1,15 +1,12 @@
 package com.ufo.imageselector;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Binder;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -24,9 +21,9 @@ import java.io.Serializable;
  * 描述：Android 6.0权限工具类
  */
 
-class PermissionsManagerCompat implements Serializable {
+public class PermissionsManager_ implements Serializable {
 
-    private static final String TAG = "PermissionsManagerCompa";
+    private static final String TAG = "PermissionsManager_";
     /*权限请求码*/
     public static final int REQUEST_CODE_PERMISSIONS = 10001;
     /*应用设置页面请求码*/
@@ -36,7 +33,7 @@ class PermissionsManagerCompat implements Serializable {
     private Activity mActivity;
     private AlertDialog mAlertDialog;
 
-    public PermissionsManagerCompat(Activity activity) {
+    public PermissionsManager_(Activity activity) {
         mActivity = activity;
     }
 
@@ -76,31 +73,20 @@ class PermissionsManagerCompat implements Serializable {
 //        this.permissions = permissionsArr;
         /*判断是否有权限*/
         if (!hasSelfPermission(mActivity, this.permissions)) {
-            Log.d(TAG, "requestPermission:--> Android  权限检测一");
-            isHasGooglePermission = true;
             ActivityCompat.requestPermissions(mActivity, this.permissions, REQUEST_CODE_PERMISSIONS);
         } else {
-            if (!hasSelfSrcPermission(mActivity, this.permissions)) {
-                Log.d(TAG, "requestPermission:--> Android  权限检测二");
-                isHasGooglePermission = false;
-                ActivityCompat.requestPermissions(mActivity, this.permissions, REQUEST_CODE_PERMISSIONS);
-            } else {
-                if (null != mCallback) {
-                    mCallback.hasPermissions();
-                }
+            if (null != mCallback) {
+                mCallback.hasPermissions();
             }
-
         }
     }
-
-    //如果是有google的权限的就标记为true否则为false
-    private boolean isHasGooglePermission = true;
 
     /**
      * 发起权限申请,
      * 设置权限通过@see setPermission(permissions);
      */
     public void requestPermission() {
+        Log.d(TAG, "requestPermission:--> Permission: "+this.permissions.length);
         this.requestPermission(null);
     }
 
@@ -125,50 +111,12 @@ class PermissionsManagerCompat implements Serializable {
             }
 
             if (null != mCallback) {
-                if (isHasGooglePermission) {
-                    if (hasAllPermissions) {
-                        mCallback.hasPermissions();
-                        Log.d(TAG, "resultPermissionsProcess:--> 有权限");
-                    } else {
-                        mCallback.noPermissions();
-                        Log.d(TAG, "resultPermissionsProcess:--> 无权限");
-                    }
+                if (hasAllPermissions) {
+                    mCallback.hasPermissions();
                 } else {
-                    if (hasAllPermissions && hasSelfSrcPermission(activity, permissions)) {
-                        mCallback.hasPermissions();
-                        Log.d(TAG, "resultPermissionsProcess:--> 有权限");
-                    } else {
-                        mCallback.noPermissions();
-                        Log.d(TAG, "resultPermissionsProcess:--> 无权限");
-                    }
+                    mCallback.noPermissions();
                 }
-
-
             }
-//            if (isHasGooglePermission) {
-//                if (null != mCallback) {
-//                    if (hasAllPermissions) {
-//                        mCallback.hasPermissions();
-//                        Log.d(TAG, "resultPermissionsProcess:--> 有权限");
-//                    } else {
-//                        mCallback.noPermissions();
-//                        Log.d(TAG, "resultPermissionsProcess:--> 无权限");
-//                    }
-//                }
-//                return;
-//            }
-//
-//            if (hasAllPermissions && hasSelfSrcPermission(activity, permissions)) {
-//                if (null != mCallback) {
-//                    mCallback.hasPermissions();
-//                    Log.d(TAG, "resultPermissionsProcess:--> 有权限");
-//                }
-//            } else {
-//                if (null != mCallback) {
-//                    mCallback.noPermissions();
-//                    Log.d(TAG, "resultPermissionsProcess:--> 无权限");
-//                }
-//            }
 
 
         }
@@ -222,44 +170,6 @@ class PermissionsManagerCompat implements Serializable {
         }
         return true;
     }
-
-
-    /**
-     * 对于国产的系统还要进行对原生的权限进行检查
-     *
-     * @return
-     */
-    @TargetApi(Build.VERSION_CODES.M)
-    private boolean hasSelfSrcPermission(Context context, String[] permissions) {
-        if (!isNOGoogleRoom()) {
-            //如果不是国产系统就返回true,表示不用进行原生权限检测
-            return true;
-        }
-
-        AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-        for (int i = 0; i < permissions.length; i++) {
-            String permissionToOp = AppOpsManager.permissionToOp(permissions[i]);
-            Log.d(TAG, "hasSelfSrcPermission:--> permissionToOp: " + permissionToOp);
-            int checkOpResult = appOpsManager.checkOp(permissionToOp, Binder.getCallingUid(), context.getPackageName());
-            Log.d(TAG, "hasSelfSrcPermission:--> checkOPResult: " + checkOpResult);
-            if (checkOpResult != AppOpsManager.MODE_ALLOWED) {
-                return false;
-            }
-        }
-        Log.d(TAG, "hasSelfSrcPermission:--> 返回 true");
-        return true;
-    }
-
-
-    /**
-     * 部分国产系统对权限进行了修改,如小米,魅族等,如果是此类的系统返回true,否则返回False
-     *
-     * @return
-     */
-    private boolean isNOGoogleRoom() {
-        return Build.MANUFACTURER.equals("Xiaomi") || Build.MANUFACTURER.equals("Meizu");
-    }
-
 
     /**
      * 显示打开应用的设置页面对话框
@@ -316,7 +226,7 @@ class PermissionsManagerCompat implements Serializable {
     }
 
 
-    public void openSettingActivity(Activity activity) {
+    private void openSettingActivity(Activity activity) {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + activity.getPackageName()));
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         activity.startActivityForResult(intent, REQUEST_CODE_SETTING);

@@ -52,7 +52,7 @@ public class ImageSelectActivity extends BasicActivity {
     @Override
     protected void initView() {
         mTitleBar = setTitleBar(R.id.titleBar, getString(R.string.text_image_select), true, false, true, new MyOnTitleBarAllClickListener());
-        mTitleBar.setTvRightText(getString(R.string.text_confrim));
+        mTitleBar.setTvRightText(getString(R.string.text_confirm));
         mTitleBar.setTvRightTextColor(R.color.colorRed);
 
         mRecyclerView = findId(R.id.rv);
@@ -141,9 +141,9 @@ public class ImageSelectActivity extends BasicActivity {
     }
 
     //跳到预览页面
-    private void launcherToViewerActivity() {
+    private void launcherToViewerActivity(ArrayList<String> list) {
         Intent intent = new Intent(this, ViewerActivity.class);
-        intent.putExtra(PhotoActivity.KEY_DATA, (Serializable) selectImageList);
+        intent.putExtra(PhotoActivity.KEY_DATA, list);
         startActivity(intent);
     }
 
@@ -167,7 +167,9 @@ public class ImageSelectActivity extends BasicActivity {
     private class MyOnItemClickListener implements BasicAdapter.OnItemClickListener {
         @Override
         public void onItemClick(View view, int position) {
-
+            ArrayList<String> list = new ArrayList<>(1);
+            list.add(mList.get(position).getPath());
+            launcherToViewerActivity(list);
         }
     }
 
@@ -184,7 +186,7 @@ public class ImageSelectActivity extends BasicActivity {
     private class MyOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            launcherToViewerActivity();
+            launcherToViewerActivity((ArrayList<String>) selectImageList);
         }
     }
 }

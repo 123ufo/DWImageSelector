@@ -1,8 +1,13 @@
 package com.ufo.imageselector;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,6 +35,7 @@ import java.util.List;
 public class PhotoActivity extends BasicActivity {
     private static final String TAG = "PhotoActivity";
     private RecyclerView mRecyclerView;
+    private AlbumAdapter mAlbumAdapter;
     private List<ImageEntity> mList = new ArrayList<>();
     //请求码,跳到选择图片页面的请求码.
     private static final int REQUEST_CODE_IMG = 1111;
@@ -37,16 +43,71 @@ public class PhotoActivity extends BasicActivity {
     private static final int REQUEST_CODE_CAMERA = 1112;
     //数据的key.用于获取从选择图片返回来的数据.
     public static final String KEY_DATA = "data";
-    //最多可以选择的图片的数量
+    //数据的key.最多可以选择的图片的数量
     public static final String KEY_SELECT_MAX_LEN = "select_max_len";
+    //数据的key.用于获取意图,是拍照还是选择照片
+    public static final String KEY_ACTION = "action";
     //数据的key.用于获取状态保存的拍照图片文件
     private static final String KEY_CAMERA_FILE = "camera_file";
     private File mCameraFile;
     //最多可选的文件数量
     private int selectMaxLen;
-    private AlbumAdapter mAlbumAdapter;
+    //拍照还是选择照片 ACTION_ALBUM or ACTION_CAMERA
+    private int mAction;
     //列的数量
     private static final int COLUMN = 3;
+    //需要的权限
+    private static final String[] permissions = new String[]{Manifest.permission.CAMERA};
+
+    @Override
+    protected String[] returnPermissionArr() {
+        return permissions;
+    }
+
+    @Override
+    protected void hasPermission() {
+        Log.d(TAG, "hasPermission:--> 有权限");
+        launcherToCameraActivity();
+    }
+
+    @Override
+    protected void noPermission() {
+        Log.d(TAG, "noPermission:--> 没权限");
+//        mPermissionsManagerCompat.showOpenSettingDialogSingle(this);
+        showOpenSettingDialogSingle();
+    }
+
+
+    private AlertDialog mAlertDialog;
+    public static final int REQUEST_CODE_SETTING = 10002;
+
+    /**
+     * 显示打开应用的设置页面对话框 只有一个按钮的
+     */
+    public void showOpenSettingDialogSingle() {
+        if (null != mAlertDialog && mAlertDialog.isShowing()) {
+            mAlertDialog.dismiss();
+            mAlertDialog = null;
+        }
+        mAlertDialog = new AlertDialog.Builder(this).setTitle("提示")
+                .setMessage("当前应用所需要的权限已经被你禁用，你只能找到-权限管理，然后手动打开所需的权限")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        openSettingActivity();
+                    }
+                })
+                .show();
+    }
+
+
+    private void openSettingActivity() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName()));
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        startActivityForResult(intent, REQUEST_CODE_SETTING);
+    }
+
 
     @Override
     public int getContentView() {
@@ -54,8 +115,7 @@ public class PhotoActivity extends BasicActivity {
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
+    protected void initReSaveInstanceState(Bundle savedInstanceState) {
         if (null != savedInstanceState) {
             mCameraFile = (File) savedInstanceState.getSerializable(KEY_CAMERA_FILE);
         }
@@ -70,7 +130,7 @@ public class PhotoActivity extends BasicActivity {
     @Override
     protected void initView() {
         TitleBar titleBar = setTitleBar(R.id.titleBar, getString(R.string.text_photo), true, false, false, new MyOnTitleBarAllClickListener());
-        titleBar.setTvRightText(getString(R.string.text_confrim));
+        titleBar.setTvRightText(getString(R.string.text_confirm));
         mRecyclerView = findId(R.id.rv);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, COLUMN));
         mAlbumAdapter = new AlbumAdapter(this, mList);
@@ -83,7 +143,9 @@ public class PhotoActivity extends BasicActivity {
     @Override
     protected void initData() {
         selectMaxLen = getIntent().getIntExtra(KEY_SELECT_MAX_LEN, 1);
+        mAction = getIntent().getIntExtra(KEY_ACTION, DWImages.ACTION_ALBUM);
         Log.d(TAG, "initData:--> selectMaxLen: " + selectMaxLen);
+        Log.d(TAG, "initData:--> mAction: " + mAction);
 
         //获取相册集
         new ImageHelper().getAlbum(this, true, new ImageHelper.OnImageFetchCallback() {
@@ -100,6 +162,19 @@ public class PhotoActivity extends BasicActivity {
                 Log.d(TAG, "onFailed:--> errorMsg: " + errorMsg);
             }
         });
+
+        Log.d(TAG, "initData:--> mCameraFile: " + mCameraFile);
+        if (mAction == DWImages.ACTION_CAMERA && null == mCameraFile) {
+            Log.d(TAG, "initData:--> requestPermission------");
+            requestCameraPermission();
+        }
+    }
+
+    /**
+     * 请求摄像头权限
+     */
+    private void requestCameraPermission() {
+        mPermissionsManagerCompat.requestPermission();
     }
 
     //添加一条拍照功能的Item
@@ -122,7 +197,11 @@ public class PhotoActivity extends BasicActivity {
         mCameraFile = FileUtils.newFileOnExternalCacheDir(this, FileUtils.newFileName(null));
         intent.putExtra(MediaStore.EXTRA_OUTPUT, UriUtils.FileToUri(this, mCameraFile));
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        startActivityForResult(intent, REQUEST_CODE_CAMERA);
+        try {
+            startActivityForResult(intent, REQUEST_CODE_CAMERA);
+        } catch (SecurityException e) {
+            Log.d(TAG, "launcherToCameraActivity:--> 运行时异常");
+        }
     }
 
     @Override
@@ -132,10 +211,15 @@ public class PhotoActivity extends BasicActivity {
             List<String> list = (List<String>) data.getSerializableExtra(KEY_DATA);
             setResultAndFinish((ArrayList<String>) list);
         } else if (requestCode == REQUEST_CODE_CAMERA) {
-            Log.d(TAG, "onActivityResult:--> file: " + mCameraFile.getAbsolutePath());
-            ArrayList<String> cameraList = new ArrayList<>(1);
-            cameraList.add(mCameraFile.getAbsolutePath());
-            setResultAndFinish(cameraList);
+            if (null != mCameraFile && mCameraFile.length() > 0) {
+                Log.d(TAG, "onActivityResult:--> file: " + mCameraFile.getAbsolutePath());
+                ArrayList<String> cameraList = new ArrayList<>(1);
+                cameraList.add(mCameraFile.getAbsolutePath());
+                setResultAndFinish(cameraList);
+            } else if (mAction == DWImages.ACTION_CAMERA) {
+                Log.d(TAG, "onActivityResult:--> finish " + mCameraFile);
+                finish();
+            }
         }
     }
 
@@ -168,7 +252,7 @@ public class PhotoActivity extends BasicActivity {
         @Override
         public void onItemClick(View view, int position) {
             if (position == 0) {
-                launcherToCameraActivity();
+                requestCameraPermission();
             } else {
                 String directory = mList.get(position).getDirectory();
                 launcherToImageSelectActivity(directory, selectMaxLen);

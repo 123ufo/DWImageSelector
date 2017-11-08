@@ -5,35 +5,47 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.ufo.imageselector.DWImages;
-import com.ufo.imageselector.model.ImageHelper;
-import com.ufo.imageselector.model.entity.ImageEntity;
 
+import java.io.File;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    private TextView mTvResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        testFetchAlbums();
-//        testFetchImages();
+        mTvResult = (TextView) findViewById(R.id.tv_result);
+
+        Log.d(TAG, "onCreate:--> " + getClass().getSimpleName());
         findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startToImageSelector();
+                album();
+            }
+        });
+        findViewById(R.id.btn1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                camera();
             }
         });
 
     }
 
 
-    private void startToImageSelector() {
+    private void album() {
         DWImages.getImages(this, DWImages.ACTION_ALBUM, 6);
+    }
+
+    private void camera() {
+        DWImages.getImages(this, DWImages.ACTION_CAMERA, 1);
     }
 
     @Override
@@ -43,49 +55,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResult(List<String> images) {
                 Log.d(TAG, "onResult:--> : images: " + images.size());
+                mTvResult.setText("");
                 for (int i = 0; i < images.size(); i++) {
                     Log.d(TAG, "onResult:--> images: " + images.get(i));
+                    Log.d(TAG, "onResult:--> size: " + new File(images.get(i)).length());
+                    selectResult(images.get(i));
                 }
             }
         });
     }
 
-    private void testFetchImages() {
-        //zuiyou portrait 84cfca86ed58f11691e894e3fc6bfacb weibo Download images weibo image
-        //news_article Camera
-        new ImageHelper().getImages(this, true, "Camera", new ImageHelper.OnImageFetchCallback() {
-            @Override
-            public void onSuccess(List<ImageEntity> list) {
-                Log.d(TAG, "onSuccess:--> list: " + list.size());
-                for (int i = 0; i < list.size(); i++) {
-                    Log.d(TAG, "onSuccess:--> album: " + list.get(i).getDirectory());
-                    Log.d(TAG, "onSuccess:--> image: " + list.get(i).getPath());
-                }
-            }
-
-            @Override
-            public void onFailed(String errorMsg) {
-                Log.d(TAG, "onFailed:--> errorMsg: " + errorMsg);
-            }
-        });
+    private void selectResult(String data){
+        mTvResult.append(data);
+        mTvResult.append("\n");
     }
 
-    private void testFetchAlbums() {
-        new ImageHelper().getAlbum(this, false, new ImageHelper.OnImageFetchCallback() {
-            @Override
-            public void onSuccess(List<ImageEntity> list) {
-                for (int i = 0; i < list.size(); i++) {
-                    Log.d(TAG, "testFetchAlbums:--> Image: " + list.get(i).getDirectory());
-                    Log.d(TAG, "testFetchAlbums:--> path: " + list.get(i).getPath());
-                }
-            }
-
-            @Override
-            public void onFailed(String errorMsg) {
-                Log.d(TAG, "onFailed:--> errorMsg: " + errorMsg);
-            }
-        });
 
 
-    }
+
+
+
 }

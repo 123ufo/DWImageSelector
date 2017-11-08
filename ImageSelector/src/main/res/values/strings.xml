@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ImageSelector</string>
     <string name="text_preview">预览</string>
-    <string name="text_confrim">确定</string>
+    <string name="text_confirm">确定</string>
     <string name="text_image_select">图片选择</string>
     <string name="text_photo">相册</string>
 </resources>

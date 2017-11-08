@@ -3,7 +3,6 @@ package com.ufo.imageselector;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.List;
 
@@ -12,7 +11,7 @@ import java.util.List;
  * <p>
  * 作者:xudiwei
  * <p>
- * 描述:图片入口类
+ * 描述:图片选择入口类
  */
 
 public final class DWImages {
@@ -21,7 +20,7 @@ public final class DWImages {
     //拍照
     public static final int ACTION_CAMERA = 1;
     //请求码获取图片
-    public static final int REQUEST_CODE_IMAGES = 2020;
+    private static final int REQUEST_CODE_IMAGES = 2020;
 
 
     /**
@@ -32,12 +31,13 @@ public final class DWImages {
      * @param needImageLen action为 {@linkplain #ACTION_ALBUM}时,needImageLen的值可以为1到9
      *                     action为{@linkplain #ACTION_CAMERA}时,needImageLen的值只能为1
      */
-    public static void getImages(@NonNull Activity activity, int action, @Nullable int needImageLen) {
+    public static void getImages(@NonNull Activity activity, int action, int needImageLen) {
         checkObjectIsNull(activity);
         checkActionRange(action);
         checkNeedImageLen(needImageLen);
         Intent intent = new Intent(activity, PhotoActivity.class);
         intent.putExtra(PhotoActivity.KEY_SELECT_MAX_LEN, needImageLen);
+        intent.putExtra(PhotoActivity.KEY_ACTION,action);
         activity.startActivityForResult(intent, REQUEST_CODE_IMAGES);
     }
 
