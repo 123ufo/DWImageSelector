@@ -1,17 +1,18 @@
 # DWImageSelector
 一个用于Android的图片选择库 三行代码就能实现图片选择
 
-
-### 图片选择:
+###第二步：
+##### 图片选择:
 
    DWImages.getImages(this, DWImages.ACTION_ALBUM, 6);
 
 
-### 拍照选择:
+##### 拍照选择:
 
    DWImages.getImages(this, DWImages.ACTION_CAMERA, 1);
 
-### 结果获取:
+###第三步:
+##### 结果获取:
 
       @Override
        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
