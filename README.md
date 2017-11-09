@@ -1,15 +1,19 @@
 # DWImageSelector
 ### 一个用于Android的图片选择库 三行代码就能实现图片选择(单选、多选<1-9张>，拍照<1张>)
 
+### 第一步
+
+    请稍等
+
 ### 第二步：
 ##### 图片选择:
 
-   DWImages.getImages(this, DWImages.ACTION_ALBUM, 6);
+        DWImages.getImages(this, DWImages.ACTION_ALBUM, 6);
 
 
 ##### 拍照选择:
 
-   DWImages.getImages(this, DWImages.ACTION_CAMERA, 1);
+    DWImages.getImages(this, DWImages.ACTION_CAMERA, 1);
 
 ### 第三步:
 ##### 结果获取:
@@ -27,4 +31,4 @@
        }
 
 
- ### 具体更多操作，请看工程里的Demo.目前该项目还是测试版，有兴趣可抢先体验一下。
+ ### 具体更多操作，请看工程里的Demo。
