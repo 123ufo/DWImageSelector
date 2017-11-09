@@ -8,7 +8,7 @@
 ### 第二步：
 ##### 图片选择:
 
-        DWImages.getImages(this, DWImages.ACTION_ALBUM, 6);
+    DWImages.getImages(this, DWImages.ACTION_ALBUM, 6);
 
 
 ##### 拍照选择:
@@ -22,6 +22,7 @@
        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
            super.onActivityResult(requestCode, resultCode, data);
 
+            //就加上这行代码
            DWImages.parserResult(requestCode, data, new DWImages.GetImagesCallback() {
                @Override
                public void onResult(List<String> images) {
