@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'//添加
 
 android {
     compileSdkVersion 26
@@ -25,4 +26,13 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
     compile 'com.github.chrisbanes:PhotoView:2.0.0'
+}
+// ./gradlew clean build bintrayUpload -PbintrayUser=123ufo -PbintrayKey=9d54a05d66e6fb4bfb89a08b53c39d5ae1707a84 -PdryRun=false
+publish {
+    userOrg = '123ufo'//bintray.com用户名
+    groupId = 'com.ufo'//jcenter上的路径
+    artifactId = 'DWImageSelector'//项目名称
+    publishVersion = '0.9.0'//版本号
+    desc = '一个支持Android 图片选择的框架'//描述，不重要
+    website = 'https://github.com/123ufo/DWImageSelector'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
 }

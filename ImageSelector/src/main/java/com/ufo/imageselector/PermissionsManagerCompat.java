@@ -77,12 +77,12 @@ class PermissionsManagerCompat implements Serializable {
         /*判断是否有权限*/
         if (!hasSelfPermission(mActivity, this.permissions)) {
             Log.d(TAG, "requestPermission:--> Android  权限检测一");
-            isHasGooglePermission = true;
+            isHasGooglePermission = false;
             ActivityCompat.requestPermissions(mActivity, this.permissions, REQUEST_CODE_PERMISSIONS);
         } else {
             if (!hasSelfSrcPermission(mActivity, this.permissions)) {
                 Log.d(TAG, "requestPermission:--> Android  权限检测二");
-                isHasGooglePermission = false;
+                isHasGooglePermission = true;
                 ActivityCompat.requestPermissions(mActivity, this.permissions, REQUEST_CODE_PERMISSIONS);
             } else {
                 if (null != mCallback) {
@@ -117,29 +117,33 @@ class PermissionsManagerCompat implements Serializable {
     public void resultPermissionsProcess(Activity activity, int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             boolean hasAllPermissions = true;
+            Log.d(TAG, "resultPermissionsProcess:--> grantResults: "+grantResults.length);
+            if(grantResults.length == 0){
+                return;
+            }
             for (int i = 0; i < grantResults.length; i++) {
                 if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                     hasAllPermissions = false;
                     break;
                 }
             }
-
+            Log.d(TAG, "resultPermissionsProcess:--> hasAllPermission: "+hasAllPermissions);
             if (null != mCallback) {
                 if (isHasGooglePermission) {
                     if (hasAllPermissions) {
                         mCallback.hasPermissions();
-                        Log.d(TAG, "resultPermissionsProcess:--> 有权限");
+                        Log.d(TAG, "resultPermissionsProcess1:--> 有权限");
                     } else {
                         mCallback.noPermissions();
-                        Log.d(TAG, "resultPermissionsProcess:--> 无权限");
+                        Log.d(TAG, "resultPermissionsProcess1:--> 无权限");
                     }
                 } else {
                     if (hasAllPermissions && hasSelfSrcPermission(activity, permissions)) {
                         mCallback.hasPermissions();
-                        Log.d(TAG, "resultPermissionsProcess:--> 有权限");
+                        Log.d(TAG, "resultPermissionsProcess2:--> 有权限");
                     } else {
                         mCallback.noPermissions();
-                        Log.d(TAG, "resultPermissionsProcess:--> 无权限");
+                        Log.d(TAG, "resultPermissionsProcess2:--> 无权限");
                     }
                 }
 

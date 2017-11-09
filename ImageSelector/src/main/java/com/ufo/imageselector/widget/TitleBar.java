@@ -18,25 +18,8 @@ import com.ufo.imageselector.R;
 /**
  * Created by Administrator on 2016/12/23.
  * 作者：xudiwei
- * <p>
+ *
  * 描述：标题栏组合控件
- * <p>
- * sample:
- * <p>
- * .xml:
- * <p>
- * <com.antiphon.hanyustore.weight.TitleBar
- * android:id="@+id/title_bar"
- * android:layout_width="match_parent"
- * android:layout_height="@dimen/title_height">
- * <p>
- * </com.antiphon.hanyustore.weight.TitleBar>
- * <p>
- * .java:
- * <p>
- * TitleBar titleBar ....findViewById(R.id...);
- * titleBar.setTitle("...")
- * ......
  */
 
 public class TitleBar extends LinearLayout implements View.OnClickListener {

@@ -1,13 +1,9 @@
 package com.ufo.imageselector;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -73,41 +69,8 @@ public class PhotoActivity extends BasicActivity {
     @Override
     protected void noPermission() {
         Log.d(TAG, "noPermission:--> 没权限");
-//        mPermissionsManagerCompat.showOpenSettingDialogSingle(this);
-        showOpenSettingDialogSingle();
+        mPermissionsManagerCompat.showOpenSettingDialogSingle(this);
     }
-
-
-    private AlertDialog mAlertDialog;
-    public static final int REQUEST_CODE_SETTING = 10002;
-
-    /**
-     * 显示打开应用的设置页面对话框 只有一个按钮的
-     */
-    public void showOpenSettingDialogSingle() {
-        if (null != mAlertDialog && mAlertDialog.isShowing()) {
-            mAlertDialog.dismiss();
-            mAlertDialog = null;
-        }
-        mAlertDialog = new AlertDialog.Builder(this).setTitle("提示")
-                .setMessage("当前应用所需要的权限已经被你禁用，你只能找到-权限管理，然后手动打开所需的权限")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        openSettingActivity();
-                    }
-                })
-                .show();
-    }
-
-
-    private void openSettingActivity() {
-        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName()));
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        startActivityForResult(intent, REQUEST_CODE_SETTING);
-    }
-
 
     @Override
     public int getContentView() {

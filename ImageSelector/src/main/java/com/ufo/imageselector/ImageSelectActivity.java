@@ -33,6 +33,8 @@ public class ImageSelectActivity extends BasicActivity {
     public static final String KEY_ALBUM = "alubm";
     //最多可以选择的图片的数量
     public static final String KEY_SELECT_MAX_LEN = "select_max_len";
+    //保存当前Activity被意外回收前的数据
+    private static final String KEY_SAVE_LIST = "save_list";
     private List<ImageEntity> mList = new ArrayList<>();
     private String album;
     private int selectMaxLen;
@@ -43,6 +45,7 @@ public class ImageSelectActivity extends BasicActivity {
     private TextView mTvPreview;
     private List<String> selectImageList;
     private TitleBar mTitleBar;
+
 
     @Override
     public int getContentView() {
