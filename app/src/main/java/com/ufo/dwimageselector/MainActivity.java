@@ -3,9 +3,11 @@ package com.ufo.dwimageselector;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ufo.imageselector.DWImages;
 
@@ -47,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void crop(){
+        if(TextUtils.isEmpty(onePath)){
+            Toast.makeText(this, "图片路径不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
         DWImages.cropImage(this,onePath,4,5,400,500);
     }
 

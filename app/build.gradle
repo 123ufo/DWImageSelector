@@ -23,6 +23,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     testCompile 'junit:junit:4.12'
 //    compile project(':ImageSelector')
-    compile 'com.ufo:DWImageSelector:0.9.2'
+    compile 'com.ufo:DWImageSelector:0.9.3'
 
 }

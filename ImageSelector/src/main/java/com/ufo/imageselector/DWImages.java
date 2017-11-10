@@ -3,6 +3,7 @@ package com.ufo.imageselector;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import java.util.List;
 
@@ -63,6 +64,7 @@ public final class DWImages {
      */
     public static void cropImage(@NonNull Activity activity, @NonNull String srcImagePath
             , int aspectX, int aspectY, int outputX, int outputY) {
+        checkStringNull(srcImagePath);
         Intent intent = new Intent(activity, CropActivity.class);
         intent.putExtra(CropActivity.KEY_CROP_IMAGE_FILE_PATH, srcImagePath);
         intent.putExtra(CropActivity.KEY_CROP_ASPECTX, aspectX);
@@ -72,6 +74,8 @@ public final class DWImages {
         activity.startActivityForResult(intent, REQUEST_CODE_CROP);
 
     }
+
+
 
     /**
      * 对裁剪后的数据进行解析,把这个代码添加到onActivityResult里
@@ -99,6 +103,12 @@ public final class DWImages {
         if (requestCode == REQUEST_CODE_IMAGES && null != intent) {
             List<String> images = (List<String>) intent.getSerializableExtra(PhotoActivity.KEY_DATA);
             callback.onResult(images);
+        }
+    }
+
+    private static void checkStringNull(String srcImagePath) {
+        if (TextUtils.isEmpty(srcImagePath)) {
+            throw new IllegalArgumentException("srcImagePath can not empty");
         }
     }
 
