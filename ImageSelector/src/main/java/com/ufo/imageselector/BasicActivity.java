@@ -22,21 +22,28 @@ import com.ufo.imageselector.widget.TitleBar;
 
 abstract class BasicActivity extends AppCompatActivity {
     private static final String TAG = "BasicActivity";
-    protected  PermissionsManagerCompat mPermissionsManagerCompat;
+    protected PermissionsManagerCompat mPermissionsManagerCompat;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate:--> "+getClass().getSimpleName());
+        Log.d(TAG, "onCreate:--> " + getClass().getSimpleName());
         mPermissionsManagerCompat = new PermissionsManagerCompat(this);
         mPermissionsManagerCompat.setPermissions(returnPermissionArr());
         mPermissionsManagerCompat.setPermissionCallback(new MyOnPermissionsCallback());
         initReSaveInstanceState(savedInstanceState);
         setContentView(getContentView());
+        initParams();
         initView();
         initData();
     }
 
+    /**
+     * 初始化上个页面传过来的参数
+     */
+    protected void initParams() {
+
+    }
 
 
     /**
@@ -101,6 +108,7 @@ abstract class BasicActivity extends AppCompatActivity {
 
     /**
      * 初始化状态保存数据
+     *
      * @param savedInstanceState
      */
     protected void initReSaveInstanceState(Bundle savedInstanceState) {

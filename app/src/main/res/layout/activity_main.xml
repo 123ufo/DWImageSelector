@@ -23,6 +23,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="拍照"/>
+    <Button
+        android:id="@+id/btn3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="裁剪"/>
 
     <Button
         android:id="@+id/btn2"

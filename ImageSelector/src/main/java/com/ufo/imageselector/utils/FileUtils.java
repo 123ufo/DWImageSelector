@@ -22,6 +22,7 @@ public class FileUtils {
 
     /**
      * 创建一个指定 filename的文件在应用的外部Cache目录里
+     * 如:/storage/emulated/0/Android/data/com.irongxiaobai.rxbl/cache/bb.txt
      *
      * @param context  上下文
      * @param filename 文件名
@@ -46,6 +47,7 @@ public class FileUtils {
 
     /**
      * 创建一个指定 dirName的文件平在应用的外部Cache目录里
+     * 如:/storage/emulated/0/Android/data/com.irongxiaobai.rxbl/cache/Demo
      *
      * @param context 上下文
      * @param dirName 文件夹名字
@@ -71,6 +73,7 @@ public class FileUtils {
 
     /**
      * 创建一个指定 filename的文件在应用的内部Cache目录里
+     * 如:/data/user/0/com.irongxiaobai.rxbl/cache/bb.txt
      *
      * @param context  上下文
      * @param filename 文件名
@@ -94,6 +97,7 @@ public class FileUtils {
 
     /**
      * 创建一个指定 filename 系统下载目录的文件并返回
+     * 如/storage/emulated/0/Download/Demo.txt
      *
      * @param context  上下文
      * @param fileName 文件名
@@ -113,6 +117,14 @@ public class FileUtils {
         return file;
     }
 
+    /**
+     * 创建一个指定 filename 的文件在SD卡下以包名为目录里并返回
+     * 如: com.irongxiaobai.rxb/demo.txt
+     *
+     * @param context  上下文
+     * @param fileName 文件名
+     * @return 返回创建成功的文件或null
+     */
     @Nullable
     public static File newSdcardDirFile(@NonNull Context context, @NonNull String fileName) {
         String sdcardState = Environment.getExternalStorageState();
@@ -130,6 +142,85 @@ public class FileUtils {
                     return null;
                 }
             }
+            return file;
+        }
+        return null;
+    }
+
+    /**
+     * 在SD卡里的包名目录中创建一个指定子目录的文件
+     * 如: /com.irongxiaobai.rxb/Demo/text.txt
+     *
+     * @param context    上下文
+     * @param subDirname 子目录名字
+     * @param fileName   文件名
+     * @return 返回创建成功的文件
+     */
+    @Nullable
+    public static File newSdcardSubDirFile(@NonNull Context context, @NonNull String subDirname, @NonNull String fileName) {
+        String storageState = Environment.getExternalStorageState();
+        if (storageState.equals(Environment.MEDIA_MOUNTED)) {
+            File sdcardDir = Environment.getExternalStorageDirectory();
+            File appSubDir = new File(sdcardDir, context.getPackageName() + "/" + subDirname);
+            if (!appSubDir.exists()) {
+                appSubDir.mkdirs();
+            }
+            File file = new File(appSubDir, fileName);
+            if (!file.exists()) {
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    return null;
+                }
+            }
+            return file;
+        }
+        return null;
+    }
+
+    /**
+     * 获取一个指定 filename 的文件在SD卡下以包名为目录里并返回路径,(注意.这里不创建文件)
+     * 如: com.irongxiaobai.rxb/demo.txt
+     *
+     * @param context  上下文
+     * @param fileName 文件名
+     * @return 返回文件路径或null
+     */
+    @Nullable
+    public static File getSdcardDirFile(@NonNull Context context, @NonNull String fileName) {
+        String sdcardState = Environment.getExternalStorageState();
+        if (sdcardState.equals(Environment.MEDIA_MOUNTED)) {
+            File sdcardDir = Environment.getExternalStorageDirectory();
+            File appSdcardDir = new File(sdcardDir, context.getPackageName());
+            if (!appSdcardDir.exists()) {
+                appSdcardDir.mkdirs();
+            }
+            File file = new File(appSdcardDir, fileName);
+            return file;
+        }
+        return null;
+    }
+
+
+    /**
+     * 在SD卡里的包名目录中创建一个指定子目录的但是不创建文件然后返回这个文件
+     * 如: /com.irongxiaobai.rxb/Demo/text.txt
+     *
+     * @param context    上下文
+     * @param subDirname 子目录名字
+     * @param fileName   文件名
+     * @return 返回文件的路径
+     */
+    @Nullable
+    public static File getSdcardSubDirFile(@NonNull Context context, @NonNull String subDirname, @NonNull String fileName) {
+        String storageState = Environment.getExternalStorageState();
+        if (storageState.equals(Environment.MEDIA_MOUNTED)) {
+            File sdcardDir = Environment.getExternalStorageDirectory();
+            File appSubDir = new File(sdcardDir, context.getPackageName() + "/" + subDirname);
+            if (!appSubDir.exists()) {
+                appSubDir.mkdirs();
+            }
+            File file = new File(appSubDir, fileName);
             return file;
         }
         return null;
@@ -154,5 +245,7 @@ public class FileUtils {
 
         return fileName;
     }
+
+
 
 }

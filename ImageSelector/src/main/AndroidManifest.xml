@@ -39,6 +39,8 @@
                 android:resource="@xml/file_paths"/>
         </provider>
 
+        <activity android:name=".CropActivity">
+        </activity>
     </application>
 
 </manifest>

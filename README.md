@@ -31,6 +31,20 @@
            });
        }
 
+### 进阶：
+
+          若要对图片进行裁剪可以调用：
+          DWImages.cropImage(this,onePath,4,5,400,500);
+
+          同样在onActivityResult里添加：
+          DWImages.parserCropResult(requestCode, data, new DWImages.CropImageCallback() {
+                    @Override
+                    public void onResult(String images) {
+                        Log.d(TAG, "onResult:--> Crop path: " + images);
+                        Log.d(TAG, "onResult:--> Crop size: " + new File(images).length());
+                    }
+                });
+
 
  ### 具体更多操作，请看工程里的Demo,欢迎大家多多尝试，多挑毛病.
 

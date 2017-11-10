@@ -15,6 +15,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private TextView mTvResult;
+    private String onePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,17 @@ public class MainActivity extends AppCompatActivity {
                 camera();
             }
         });
+        findViewById(R.id.btn3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crop();
+            }
+        });
 
+    }
+
+    private void crop(){
+        DWImages.cropImage(this,onePath,4,5,400,500);
     }
 
 
@@ -60,12 +71,23 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "onResult:--> images: " + images.get(i));
                     Log.d(TAG, "onResult:--> size: " + new File(images.get(i)).length());
                     selectResult(images.get(i));
+
+
+                    onePath = images.get(i);
                 }
+            }
+        });
+
+        DWImages.parserCropResult(requestCode, data, new DWImages.CropImageCallback() {
+            @Override
+            public void onResult(String images) {
+                Log.d(TAG, "onResult:--> Crop path: " + images);
+                Log.d(TAG, "onResult:--> Crop size: " + new File(images).length());
             }
         });
     }
 
-    private void selectResult(String data){
+    private void selectResult(String data) {
         mTvResult.append(data);
         mTvResult.append("\n");
     }
