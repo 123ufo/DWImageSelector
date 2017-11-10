@@ -33,3 +33,7 @@
 
 
  ### 具体更多操作，请看工程里的Demo。
+
+ ###扫我安装休验Demo
+
+<img src="https://github.com/123ufo/DWImageSelector/blob/master/imgs/ic_qrcode.jpg?raw=true" width="280"/>
