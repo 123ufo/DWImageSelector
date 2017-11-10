@@ -3,7 +3,7 @@
 
 ### 第一步
 
-    compile 'com.ufo:DWImageSelector:0.9.1'
+    compile 'com.ufo:DWImageSelector:0.9.2'
 
 ### 第二步：
 ##### 图片选择:
