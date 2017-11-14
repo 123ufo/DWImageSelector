@@ -12,13 +12,11 @@
         android:supportsRtl="true">
         <activity
             android:name=".PhotoActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/RXBTheme">
         </activity>
         <activity
             android:name=".ImageSelectActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/RXBTheme">
         </activity>

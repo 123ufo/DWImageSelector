@@ -46,14 +46,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
-    private void crop(){
-        if(TextUtils.isEmpty(onePath)){
+
+    private void crop() {
+        if (TextUtils.isEmpty(onePath)) {
             Toast.makeText(this, "图片路径不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
-        DWImages.cropImage(this,onePath,4,5,400,500);
+        DWImages.cropImage(this, onePath, 4, 5, 400, 500);
     }
 
 
@@ -65,9 +67,14 @@ public class MainActivity extends AppCompatActivity {
         DWImages.getImages(this, DWImages.ACTION_CAMERA, 1);
     }
 
+
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult:--> data: "+data);
+        Log.d(TAG, "onActivityResult:--> requestCode: "+requestCode);
         DWImages.parserResult(requestCode, data, new DWImages.GetImagesCallback() {
             @Override
             public void onResult(List<String> images) {

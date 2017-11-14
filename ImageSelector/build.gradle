@@ -31,7 +31,7 @@ publish {
     userOrg = '123ufo'//bintray.com用户名
     groupId = 'com.ufo'//jcenter上的路径
     artifactId = 'DWImageSelector'//项目名称
-    publishVersion = '0.9.3'//版本号
+    publishVersion = '0.9.4'//版本号
     desc = '一个支持Android 图片选择的框架'//描述，不重要
     website = 'https://github.com/123ufo/DWImageSelector'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
 }
