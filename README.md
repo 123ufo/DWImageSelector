@@ -50,4 +50,4 @@
 
  ### 扫我安装体验Demo
 
-<img src="https://github.com/123ufo/DWImageSelector/blob/master/imgs/ic_qrcode.jpg?raw=true" width="280"/>
+<img src="https://github.com/123ufo/DWImageSelector/blob/master/imgs/dwimageselect_0.9.5.jpg?raw=true" width="280"/>
