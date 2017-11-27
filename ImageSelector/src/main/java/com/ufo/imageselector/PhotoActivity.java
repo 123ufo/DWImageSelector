@@ -52,8 +52,9 @@ public class PhotoActivity extends BasicActivity {
     private int mAction;
     //列的数量
     private static final int COLUMN = 3;
-    //需要的权限
-    private static final String[] permissions = new String[]{Manifest.permission.CAMERA};
+    //需要的权限拍照权限
+    private static final String[] permissions = new String[]{Manifest.permission.CAMERA,
+            Manifest.permission.READ_EXTERNAL_STORAGE};
 
     @Override
     protected String[] returnPermissionArr() {
@@ -63,7 +64,11 @@ public class PhotoActivity extends BasicActivity {
     @Override
     protected void hasPermission() {
         Log.d(TAG, "hasPermission:--> 有权限");
-        launcherToCameraActivity();
+        if (mAction == DWImages.ACTION_CAMERA && null == mCameraFile) {
+            launcherToCameraActivity();
+        } else if (mAction == DWImages.ACTION_ALBUM) {
+            getPhoto();
+        }
     }
 
     @Override
@@ -110,6 +115,23 @@ public class PhotoActivity extends BasicActivity {
         Log.d(TAG, "initData:--> selectMaxLen: " + selectMaxLen);
         Log.d(TAG, "initData:--> mAction: " + mAction);
 
+
+        requestCameraPermission();
+
+        Log.d(TAG, "initData:--> mCameraFile: " + mCameraFile);
+//        if (mAction == DWImages.ACTION_CAMERA && null == mCameraFile) {
+//            Log.d(TAG, "initData:--> requestPermission------");
+//            requestCameraPermission();
+//        }
+//        if (mAction == DWImages.ACTION_ALBUM) {
+//            requestAlbumPermission();
+//        }
+    }
+
+    /**
+     * 获取相册数据
+     */
+    private void getPhoto() {
         //获取相册集
         new ImageHelper().getAlbum(this, true, new ImageHelper.OnImageFetchCallback() {
             @Override
@@ -122,15 +144,17 @@ public class PhotoActivity extends BasicActivity {
 
             @Override
             public void onFailed(String errorMsg) {
-                Log.d(TAG, "onFailed:--> errorMsg: " + errorMsg);
+                Log.d(TAG, "onFailed:--> errorMsg::: " + errorMsg);
             }
         });
+    }
 
-        Log.d(TAG, "initData:--> mCameraFile: " + mCameraFile);
-        if (mAction == DWImages.ACTION_CAMERA && null == mCameraFile) {
-            Log.d(TAG, "initData:--> requestPermission------");
-            requestCameraPermission();
-        }
+
+    /**
+     * 请求相册权限
+     */
+    private void requestAlbumPermission() {
+        mPermissionsManagerCompat.requestPermission();
     }
 
     /**
@@ -163,7 +187,7 @@ public class PhotoActivity extends BasicActivity {
         try {
             startActivityForResult(intent, REQUEST_CODE_CAMERA);
         } catch (SecurityException e) {
-            Log.d(TAG, "launcherToCameraActivity:--> 运行时异常");
+            Log.d(TAG, "launcherToCameraActivity:--> 运行时异常:" + e.toString());
         }
     }
 
@@ -215,7 +239,8 @@ public class PhotoActivity extends BasicActivity {
         @Override
         public void onItemClick(View view, int position) {
             if (position == 0) {
-                requestCameraPermission();
+//                requestCameraPermission();
+                launcherToCameraActivity();
             } else {
                 String directory = mList.get(position).getDirectory();
                 launcherToImageSelectActivity(directory, selectMaxLen);

@@ -68,13 +68,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult:--> data: "+data);
-        Log.d(TAG, "onActivityResult:--> requestCode: "+requestCode);
+        Log.d(TAG, "onActivityResult:--> data: " + data);
+        Log.d(TAG, "onActivityResult:--> requestCode: " + requestCode);
         DWImages.parserResult(requestCode, data, new DWImages.GetImagesCallback() {
             @Override
             public void onResult(List<String> images) {
@@ -96,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResult(String images) {
                 Log.d(TAG, "onResult:--> Crop path: " + images);
                 Log.d(TAG, "onResult:--> Crop size: " + new File(images).length());
+                selectResult(images);
             }
         });
     }
